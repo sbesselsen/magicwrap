@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+<script src="../magicwrap.min.js"></script>
+<script>
+$(function () {
+
+    var wraps = [
+        { id: 'wrap-1', str: 'this is an extraordinarily difficult mathematical problem, completely out of reach of present day mathematics' },
+        { id: 'wrap-2', str: 'the conjecture can be summarized as follows. Take any integer n >= 1. If n is even, divide it by 2 to get n / 2. If n is odd, multiply it by 3 and add 1 to obtain 3n + 1 and repeat' }
+    ];
+
+    $('body').magicwrap('apply', {
+        wraps: wraps
+    });
+
+    $('#update-wraps').click(function () {
+        wraps.shift();
+        wraps.push({ str: 'Mathematics may not be ready for these problems' });
+        $('body').magicwrap('update', {
+            wraps: wraps
+        });
+        $(this).hide();
+    });
+});
+
+</script>
+<style>
+.magicwrap {
+    background-color: #D2A8F4;
+}
+</style>
+</head>
+<body>
+<p>The <b>Collatz conjecture</b> is a <a href="/wiki/Conjecture" title="Conjecture">conjecture</a> in <a href="/wiki/Mathematics" title="Mathematics">mathematics</a> named after <a href="/wiki/Lothar_Collatz" title="Lothar Collatz">Lothar Collatz</a>. The conjecture is also known as the <b>3<i>n</i>&#160;+&#160;1 conjecture</b>, the <b>Ulam conjecture</b> (after <a href="/wiki/Stanis%C5%82aw_Ulam" class="mw-redirect" title="Stanisław Ulam">Stanisław Ulam</a>), <b>Kakutani's problem</b> (after <a href="/wiki/Shizuo_Kakutani" title="Shizuo Kakutani">Shizuo Kakutani</a>), the <b>Thwaites conjecture</b> (after Sir Bryan Thwaites), <b>Hasse's algorithm</b> (after <a href="/wiki/Helmut_Hasse" title="Helmut Hasse">Helmut Hasse</a>), or the <b>Syracuse problem</b>;<sup id="cite_ref-1" class="reference"><a href="#cite_note-1">[1]</a></sup><sup id="cite_ref-3" class="reference"><a href="#cite_note-3">[3]</a></sup> the sequence of numbers involved is referred to as the <b>hailstone sequence</b> or <b>hailstone numbers</b> (because the values are usually subject to multiple descents and ascents like <a href="/wiki/Hailstones" class="mw-redirect" title="Hailstones">hailstones</a> in a cloud),<sup id="cite_ref-4" class="reference"><a href="#cite_note-4">[4]</a></sup><sup id="cite_ref-hn_5-0" class="reference"><a href="#cite_note-hn-5">[5]</a></sup> or as <b>wondrous numbers</b>.<sup id="cite_ref-6" class="reference"><a href="#cite_note-6">[6]</a></sup></p>
+<p>The conjecture can be summarized as follows. Take any <a href="/wiki/Positive_integer" class="mw-redirect" title="Positive integer">positive integer</a> <i>n</i>. If <i>n</i> is even, divide it by 2 to get <i>n</i>&#160;/&#160;2. If <i>n</i> is odd, multiply it by 3 and add 1 to obtain 3<i>n</i>&#160;+&#160;1. Repeat the process (which has been called "Half Or Triple Plus One", or <b>HOTPO</b><sup id="cite_ref-7" class="reference"><a href="#cite_note-7">[7]</a></sup>) indefinitely. The conjecture is that no matter what number you start with, you will always eventually reach 1.</p>
+<p><a href="/wiki/Paul_Erd%C5%91s" title="Paul Erdős">Paul Erdős</a> said about the Collatz conjecture: "Mathematics may not be ready for such problems."<sup id="cite_ref-Guy_.282004.29_8-0" class="reference"><a href="#cite_note-Guy_.282004.29-8">[8]</a></sup> He also offered $500 for its solution.<sup id="cite_ref-9" class="reference"><a href="#cite_note-9">[9]</a></sup> <a href="/wiki/Jeffrey_Lagarias" title="Jeffrey Lagarias">Jeffrey Lagarias</a> in 2010 claimed that based only on known information about this problem, "this is an extraordinarily difficult problem, completely out of reach of present day mathematics."<sup id="cite_ref-10" class="reference"><a href="#cite_note-10">[10]</a></sup></p>
+<p><button id="update-wraps">Update wraps</button></p>
+</body>
+</html>
