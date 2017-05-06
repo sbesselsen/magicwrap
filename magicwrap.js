@@ -17,7 +17,7 @@ ArrayUtil.uniqueNumbers = function (numbers) {
 var DomUtil = {};
 
 DomUtil.walkElements = function (elem, enter, leave) {
-  if (elem.length > 0) {
+  if (elem.length > 0 && elem[0].tagName) {
     var tagName = elem[0].tagName.toUpperCase();
     if (tagName === 'SCRIPT' || tagName === 'IFRAME') {
       return;
