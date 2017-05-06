@@ -17,6 +17,12 @@ ArrayUtil.uniqueNumbers = function (numbers) {
 var DomUtil = {};
 
 DomUtil.walkElements = function (elem, enter, leave) {
+  if (elem.length > 0) {
+    var tagName = elem[0].tagName.toUpperCase();
+    if (tagName === 'SCRIPT' || tagName === 'IFRAME') {
+      return;
+    }
+  }
   if (enter) {
     enter(elem);
   }
@@ -426,7 +432,7 @@ function wrapExactString(elem, str, wrap) {
       // Split off the start.
       node = textPart.node.splitText(startIndex);
     }
-    if (endIndex < str.length) {
+    if (endIndex < textPart.length) {
       // Split off the end.
       node.splitText(endIndex - startIndex);
     }
@@ -445,18 +451,19 @@ function wrapExactString(elem, str, wrap) {
       }
       var found = textNodes.indexOf(node) !== -1;
       for (var i = 0; i < elementStack.length; i++) {
+        elementStack[i].hasTextNodes = true;
         elementStack[i].fullyContained = elementStack[i].fullyContained && found;
         if (found) {
           elementStack[i].wrappedMatchNodes.push(node);
         }
       }
     } else {
-      elementStack.push({ node: node, fullyContained: true, wrappedMatchNodes: [] });
+      elementStack.push({ node: node, fullyContained: true, hasTextNodes: false, wrappedMatchNodes: [] });
     }
   }, function (leaveElem) {
     if (leaveElem[0].nodeType !== Node.TEXT_NODE) {
       var info = elementStack.pop();
-      if (info.fullyContained) {
+      if (info.fullyContained && info.hasTextNodes) {
         wrappableElements.push(info.node);
         for (var i = 0; i < info.wrappedMatchNodes.length; i++) {
           var index = wrappableElements.indexOf(info.wrappedMatchNodes[i]);

@@ -1,6 +1,12 @@
 var DomUtil = {};
 
 DomUtil.walkElements = function (elem, enter, leave) {
+  if (elem.length > 0) {
+    var tagName = elem[0].tagName.toUpperCase();
+    if (tagName === 'SCRIPT' || tagName === 'IFRAME') {
+      return;
+    }
+  }
   if (enter) {
     enter(elem);
   }
