@@ -111,7 +111,7 @@ function apply(elem, wraps) {
       }
     }
     if (!exactStr) {
-      return;
+      continue;
     }
     wrapExactString(elem, exactStr, wrapHtml).parent().data('magicwrap-wrap', wrap);
   }
