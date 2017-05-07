@@ -6,30 +6,40 @@ FuzzySequenceUtil.bestMatchSequence = function (searchIndex, words, ngramSize, m
   if (words.length < ngramSize) {
     ngramSize = words.length;
   }
+  var minNgramMatches = 2;
 
   var wordArray = searchIndex.wordArray();
 
   // Determine potential start positions.
   var queryNgrams = NGramUtil.generateNgrams(words, ngramSize);
   var startIndices = [];
+  var seenIndices = {};
   for (var i = 0; i < queryNgrams.length; i++) {
     var queryNgram = queryNgrams[i];
     var ngramIndices = searchIndex.indicesOf(queryNgram);
     for (var j = 0; j < ngramIndices.length; j++) {
-      var startIndex = ngramIndices[j] - i;
-      for (var k = startIndex; k >= 0 && k >= startIndex - maxChanges; k--) {
-        startIndices.push(k);
+      var startIndex = ngramIndices[j] - i - maxChanges;
+      if (!seenIndices[startIndex]) {
+        seenIndices[startIndex] = 1;
+      } else {
+        seenIndices[startIndex]++;
+      }
+      if (seenIndices[startIndex] >= minNgramMatches) {
+        startIndices.push(startIndex);
       }
     }
   }
   startIndices = ArrayUtil.uniqueNumbers(startIndices);
 
+  var insertCost = 1;
+  var deleteCost = 1;
+
   // Find the best prefix match from each start index and optimize over all.
   var bestResult = null;
   for (var i = 0; i < startIndices.length; i++) {
     var startIndex = startIndices[i];
-    var wordsFromStart = wordArray.slice(startIndex);
-    var result = FuzzySequenceUtil.prefixDistance(wordsFromStart, words, 1, 1, 0, maxChanges);
+    var wordsFromStart = wordArray.slice(startIndex, startIndex + maxChanges * 2 + words.length * 2);
+    var result = FuzzySequenceUtil.prefixDistance(wordsFromStart, words, deleteCost, insertCost, 0, maxChanges);
     if (!bestResult || result.distance < bestResult.distance || (result.distance === bestResult.distance && startIndex < bestResult.startIndex)) {
       bestResult = result;
       bestResult.startIndex = startIndex;
@@ -42,16 +52,26 @@ FuzzySequenceUtil.bestMatchSequence = function (searchIndex, words, ngramSize, m
 
   // Now complete the sequence from the best result.
   var length = 0;
+  var index = bestResult.startIndex;
+  var distance = bestResult.distance;
   for (var i = 0; i < bestResult.operations.length; i++) {
+    if (bestResult.operations[i] === -1) {
+      index++;
+      distance -= deleteCost;
+    } else {
+      break;
+    }
+  }
+  for (; i < bestResult.operations.length; i++) {
     if (bestResult.operations[i] !== 1) {
       length++;
     }
   }
 
   return {
-    index: bestResult.startIndex,
+    index: index,
     length: length,
-    distance: bestResult.distance
+    distance: distance
   }
 };
 
