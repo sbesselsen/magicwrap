@@ -35,11 +35,20 @@ DomUtil.walkElements = function (elem, enter, leave) {
   }
 };
 
+DomUtil._isLineBreakingTag = function (tagName) {
+  var tagNameUpper = tagName.toUpperCase();
+  return tagNameUpper === 'P' || tagNameUpper == 'DIV' || tagNameUpper === 'SECTION' || tagNameUpper === 'ARTICLE';
+};
+
 DomUtil.serializeElementText = function (elem) {
   var textParts = [];
   DomUtil.walkElements(elem, function (item) {
     if (item[0].nodeType === Node.TEXT_NODE) {
       textParts.push(item[0].nodeValue);
+    }
+  }, function (item) {
+    if (item[0].tagName && DomUtil._isLineBreakingTag(item[0].tagName)) {
+      textParts.push(' ');
     }
   });
   return textParts.join('');
@@ -59,6 +68,11 @@ DomUtil.serializeElementTextWithOffsets = function (elem) {
       });
       textParts.push(str);
       length += str.length;
+    }
+  }, function (item) {
+    if (item[0].tagName && DomUtil._isLineBreakingTag(item[0].tagName)) {
+      textParts.push(' ');
+      length++;
     }
   });
   return { nodeInfo: nodeInfo, text: textParts.join('') };
@@ -124,6 +138,8 @@ FuzzySequenceUtil.bestMatchSequence = function (searchIndex, words, ngramSize, m
     if (bestResult.operations[i] === -1) {
       index++;
       distance -= deleteCost;
+    } else if (bestResult.operations[i] === 1) {
+      distance -= insertCost;
     } else {
       break;
     }
