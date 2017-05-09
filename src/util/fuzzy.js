@@ -58,6 +58,8 @@ FuzzySequenceUtil.bestMatchSequence = function (searchIndex, words, ngramSize, m
     if (bestResult.operations[i] === -1) {
       index++;
       distance -= deleteCost;
+    } else if (bestResult.operations[i] === 1) {
+      distance -= insertCost;
     } else {
       break;
     }
