@@ -18,14 +18,17 @@ FuzzySequenceUtil.bestMatchSequence = function (searchIndex, words, ngramSize, m
     var queryNgram = queryNgrams[i];
     var ngramIndices = searchIndex.indicesOf(queryNgram);
     for (var j = 0; j < ngramIndices.length; j++) {
-      var startIndex = ngramIndices[j] - i - maxChanges;
-      if (!seenIndices[startIndex]) {
-        seenIndices[startIndex] = 1;
-      } else {
-        seenIndices[startIndex]++;
-      }
-      if (seenIndices[startIndex] >= minNgramMatches) {
-        startIndices.push(startIndex);
+      var startIndexOptions = [ngramIndices[j] - i - maxChanges, ngramIndices[j] - i];
+      for (var k = 0; k < startIndexOptions.length; k++) {
+        var startIndex = startIndexOptions[k];
+        if (!seenIndices[startIndex]) {
+          seenIndices[startIndex] = 1;
+        } else {
+          seenIndices[startIndex]++;
+        }
+        if (seenIndices[startIndex] >= minNgramMatches) {
+          startIndices.push(startIndex);
+        }
       }
     }
   }
