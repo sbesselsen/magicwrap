@@ -1,8 +1,8 @@
-var DomUtil = {};
+const DomUtil = {};
 
 DomUtil.walkElements = function (elem, enter, leave) {
   if (elem.length > 0 && elem[0].tagName) {
-    var tagName = elem[0].tagName.toUpperCase();
+    const tagName = elem[0].tagName.toUpperCase();
     if (tagName === 'SCRIPT' || tagName === 'IFRAME') {
       return;
     }
@@ -10,9 +10,9 @@ DomUtil.walkElements = function (elem, enter, leave) {
   if (enter) {
     enter(elem);
   }
-  var self = this;
+  const self = this;
   elem.contents().each(function () {
-    self.walkElements($(this), enter, leave);
+    self.walkElements(elem.constructor.call(null, this), enter, leave);
   });
   if (leave) {
     leave(elem);
@@ -20,12 +20,12 @@ DomUtil.walkElements = function (elem, enter, leave) {
 };
 
 DomUtil._isLineBreakingTag = function (tagName) {
-  var tagNameUpper = tagName.toUpperCase();
+  const tagNameUpper = tagName.toUpperCase();
   return tagNameUpper === 'P' || tagNameUpper == 'DIV' || tagNameUpper === 'SECTION' || tagNameUpper === 'ARTICLE' || tagNameUpper === 'BR' || tagNameUpper === 'HR';
 };
 
 DomUtil.serializeElementText = function (elem) {
-  var textParts = [];
+  const textParts = [];
   DomUtil.walkElements(elem, function (item) {
     if (item[0].nodeType === Node.TEXT_NODE) {
       textParts.push(item[0].nodeValue);
@@ -39,12 +39,12 @@ DomUtil.serializeElementText = function (elem) {
 };
 
 DomUtil.serializeElementTextWithOffsets = function (elem) {
-  var nodeInfo = [];
-  var textParts = [];
-  var length = 0;
+  const nodeInfo = [];
+  const textParts = [];
+  let length = 0;
   DomUtil.walkElements(elem, function (item) {
     if (item[0].nodeType === Node.TEXT_NODE) {
-      var str = item[0].nodeValue;
+      const str = item[0].nodeValue;
       nodeInfo.push({
         offset: length,
         length: str.length,
@@ -61,3 +61,5 @@ DomUtil.serializeElementTextWithOffsets = function (elem) {
   });
   return { nodeInfo: nodeInfo, text: textParts.join('') };
 };
+
+export default DomUtil;

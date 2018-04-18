@@ -1,4 +1,9 @@
-var FuzzySequenceUtil = {};
+import ArrayUtil from './array';
+import { NGramUtil, NGramIndex } from './ngram';
+import DomUtil from './dom';
+import WordUtil from './word';
+
+const FuzzySequenceUtil = {};
 FuzzySequenceUtil.bestMatchSequence = function (searchIndex, words, ngramSize, maxChanges) {
   if (!ngramSize) {
     ngramSize = 3;
@@ -206,8 +211,8 @@ FuzzyStringMatcher.prototype.populateIndexWithString = function (str) {
   return this.populateIndexWithTokens(tokens);
 }
 
-FuzzyStringMatcher.prototype.populateIndexWithElement = function (element) {
-  return this.populateIndexWithString(DomUtil.serializeElementText(element));
+FuzzyStringMatcher.prototype.populateIndexWithElement = function ($, element) {
+  return this.populateIndexWithString(DomUtil.serializeElementText($, element));
 };
 
 FuzzyStringMatcher.prototype.matchString = function (str) {
@@ -254,3 +259,5 @@ FuzzyStringMatcher.prototype.matchTokens = function (tokens) {
 
   return result;
 };
+
+export default FuzzyStringMatcher;

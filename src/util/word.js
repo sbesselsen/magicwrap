@@ -1,4 +1,4 @@
-var WordUtil = {};
+const WordUtil = {};
 
 WordUtil.tokenizeString = function (str) {
   var words = (' ' + str).split(/\b/);
@@ -36,3 +36,5 @@ WordUtil.normalizeTokens = function (tokens) {
 WordUtil.normalizeWord = function (word) {
   return word.toLowerCase();
 };
+
+export default WordUtil;

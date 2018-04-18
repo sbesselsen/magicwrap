@@ -1,4 +1,4 @@
-var NGramUtil = {};
+export const NGramUtil = {};
 NGramUtil.generateNgrams = function (words, n) {
   var ngrams = [];
   for (var i = 0; i <= words.length - n; i++) {
@@ -11,7 +11,7 @@ NGramUtil.ngramKey = function (ngram) {
   return ngram.join('|');
 };
 
-function NGramIndex(words, n) {
+export function NGramIndex(words, n) {
   if (n <= 0) {
     throw 'n must be greater than 0';
   }

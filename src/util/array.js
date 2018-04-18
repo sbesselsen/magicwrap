@@ -1,10 +1,10 @@
-var ArrayUtil = {};
+const ArrayUtil = {};
 ArrayUtil.uniqueNumbers = function (numbers) {
-  var sorted = numbers.slice();
+  const sorted = numbers.slice();
   sorted.sort();
-  var unique = [];
-  var prev;
-  for (var i = 0; i < sorted.length; i++) {
+  const unique = [];
+  let prev = null;
+  for (let i = 0; i < sorted.length; i++) {
     if (i === 0 || prev !== sorted[i]) {
       unique.push(sorted[i]);
     }
@@ -12,3 +12,5 @@ ArrayUtil.uniqueNumbers = function (numbers) {
   }
   return unique;
 };
+
+export default ArrayUtil;
