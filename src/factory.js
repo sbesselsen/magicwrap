@@ -2,6 +2,16 @@ import DomUtil from './util/dom';
 import FuzzyStringMatcher from './util/fuzzy';
 
 export default function magicWrapFactory($) {
+    function isWrappableElement(node) {
+        if (node.nodeName) {
+            const nodeName = ('' + node.nodeName).toLowerCase();
+            if (nodeName.match(/^(span|a|i|b|em|strong|h[123456]|abbr|font)$/)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function wrapExactString(elem, str, wrap) {
         var textNodes = [];
 
@@ -59,7 +69,7 @@ export default function magicWrapFactory($) {
         }, function (leaveElem) {
             if (leaveElem[0].nodeType !== Node.TEXT_NODE) {
                 var info = elementStack.pop();
-                if (info.fullyContained && info.hasTextNodes) {
+                if (info.fullyContained && info.hasTextNodes && isWrappableElement(leaveElem[0])) {
                     wrappableElements.push(info.node);
                     for (var i = 0; i < info.wrappedMatchNodes.length; i++) {
                         var index = wrappableElements.indexOf(info.wrappedMatchNodes[i]);

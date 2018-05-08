@@ -24,7 +24,7 @@
 
   DomUtil._isLineBreakingTag = function (tagName) {
     var tagNameUpper = tagName.toUpperCase();
-    return tagNameUpper === 'P' || tagNameUpper == 'DIV' || tagNameUpper === 'SECTION' || tagNameUpper === 'ARTICLE' || tagNameUpper === 'BR' || tagNameUpper === 'HR';
+    return tagNameUpper === 'P' || tagNameUpper == 'DIV' || tagNameUpper === 'SECTION' || tagNameUpper === 'ARTICLE' || tagNameUpper === 'BR' || tagNameUpper === 'HR' || tagNameUpper === 'TABLE' || tagNameUpper === 'TR' || tagNameUpper === 'TD' || tagNameUpper === 'TH' || tagNameUpper === 'LI';
   };
 
   DomUtil.serializeElementText = function (elem) {
@@ -448,6 +448,16 @@
   };
 
   function magicWrapFactory($) {
+      function isWrappableElement(node) {
+          if (node.nodeName) {
+              var nodeName = ('' + node.nodeName).toLowerCase();
+              if (nodeName.match(/^(span|a|i|b|em|strong|h[123456]|abbr|font)$/)) {
+                  return true;
+              }
+          }
+          return false;
+      }
+
       function wrapExactString(elem, str, wrap) {
           var textNodes = [];
 
@@ -505,7 +515,7 @@
           }, function (leaveElem) {
               if (leaveElem[0].nodeType !== Node.TEXT_NODE) {
                   var info = elementStack.pop();
-                  if (info.fullyContained && info.hasTextNodes) {
+                  if (info.fullyContained && info.hasTextNodes && isWrappableElement(leaveElem[0])) {
                       wrappableElements.push(info.node);
                       for (var i = 0; i < info.wrappedMatchNodes.length; i++) {
                           var index = wrappableElements.indexOf(info.wrappedMatchNodes[i]);

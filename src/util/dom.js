@@ -21,7 +21,7 @@ DomUtil.walkElements = function (elem, enter, leave) {
 
 DomUtil._isLineBreakingTag = function (tagName) {
   const tagNameUpper = tagName.toUpperCase();
-  return tagNameUpper === 'P' || tagNameUpper == 'DIV' || tagNameUpper === 'SECTION' || tagNameUpper === 'ARTICLE' || tagNameUpper === 'BR' || tagNameUpper === 'HR';
+  return tagNameUpper === 'P' || tagNameUpper == 'DIV' || tagNameUpper === 'SECTION' || tagNameUpper === 'ARTICLE' || tagNameUpper === 'BR' || tagNameUpper === 'HR' || tagNameUpper === 'TABLE' || tagNameUpper === 'TR' || tagNameUpper === 'TD' || tagNameUpper === 'TH' || tagNameUpper === 'LI';
 };
 
 DomUtil.serializeElementText = function (elem) {
