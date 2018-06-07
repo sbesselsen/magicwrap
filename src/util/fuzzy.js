@@ -195,6 +195,7 @@ function FuzzyStringMatcher(options) {
   }
   this.nGramSize = options.nGramSize || 3;
   this.maxChanges = options.maxChanges || 10;
+  this.isContentElement = options.isContentElement || function () { return true; };
 }
 
 FuzzyStringMatcher.prototype.populateIndexWithTokens = function (tokens) {
@@ -211,8 +212,8 @@ FuzzyStringMatcher.prototype.populateIndexWithString = function (str) {
   return this.populateIndexWithTokens(tokens);
 }
 
-FuzzyStringMatcher.prototype.populateIndexWithElement = function ($, element) {
-  return this.populateIndexWithString(DomUtil.serializeElementText($, element));
+FuzzyStringMatcher.prototype.populateIndexWithElement = function (element) {
+  return this.populateIndexWithString(DomUtil.serializeElementText(element, this.isContentElement));
 };
 
 FuzzyStringMatcher.prototype.matchString = function (str) {

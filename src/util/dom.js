@@ -24,13 +24,28 @@ DomUtil._isLineBreakingTag = function (tagName) {
   return tagNameUpper === 'P' || tagNameUpper == 'DIV' || tagNameUpper === 'SECTION' || tagNameUpper === 'ARTICLE' || tagNameUpper === 'BR' || tagNameUpper === 'HR' || tagNameUpper === 'TABLE' || tagNameUpper === 'TR' || tagNameUpper === 'TD' || tagNameUpper === 'TH' || tagNameUpper === 'LI';
 };
 
-DomUtil.serializeElementText = function (elem) {
+DomUtil.serializeElementText = function (elem, isContentElement) {
   const textParts = [];
+  let inNonContentCounter = 0;
   DomUtil.walkElements(elem, function (item) {
+    const isContent = isContentElement(item[0]);
+    if (!isContent) {
+        inNonContentCounter++;
+    }
+    if (inNonContentCounter > 0) {
+        return;
+    }
     if (item[0].nodeType === Node.TEXT_NODE) {
       textParts.push(item[0].nodeValue);
     }
   }, function (item) {
+    const isContent = isContentElement(item[0]);
+    if (!isContent) {
+        inNonContentCounter--;
+    }
+    if (inNonContentCounter > 0) {
+        return;
+    }
     if (item[0].tagName && DomUtil._isLineBreakingTag(item[0].tagName)) {
       textParts.push(' ');
     }
@@ -38,11 +53,19 @@ DomUtil.serializeElementText = function (elem) {
   return textParts.join('');
 };
 
-DomUtil.serializeElementTextWithOffsets = function (elem) {
+DomUtil.serializeElementTextWithOffsets = function (elem, isContentElement) {
   const nodeInfo = [];
   const textParts = [];
   let length = 0;
+  let inNonContentCounter = 0;
   DomUtil.walkElements(elem, function (item) {
+    const isContent = isContentElement(item[0]);
+    if (!isContent) {
+      inNonContentCounter++;
+    }
+    if (inNonContentCounter > 0) {
+      return;
+    }
     if (item[0].nodeType === Node.TEXT_NODE) {
       const str = item[0].nodeValue;
       nodeInfo.push({
@@ -54,6 +77,13 @@ DomUtil.serializeElementTextWithOffsets = function (elem) {
       length += str.length;
     }
   }, function (item) {
+    const isContent = isContentElement(item[0]);
+    if (!isContent) {
+      inNonContentCounter--;
+    }
+    if (inNonContentCounter > 0) {
+      return;
+    }
     if (item[0].tagName && DomUtil._isLineBreakingTag(item[0].tagName)) {
       textParts.push(' ');
       length++;

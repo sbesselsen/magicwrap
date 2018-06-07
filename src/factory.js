@@ -1,21 +1,25 @@
 import DomUtil from './util/dom';
 import FuzzyStringMatcher from './util/fuzzy';
 
-export default function magicWrapFactory($) {
-    function isWrappableElement(node) {
-        if (node.nodeName) {
-            const nodeName = ('' + node.nodeName).toLowerCase();
-            if (nodeName.match(/^(span|a|i|b|em|strong|h[123456]|abbr|font)$/)) {
-                return true;
-            }
+function isWrappableElement(node) {
+    if (node.nodeName) {
+        const nodeName = ('' + node.nodeName).toLowerCase();
+        if (nodeName.match(/^(span|a|i|b|em|strong|h[123456]|abbr|font)$/)) {
+            return true;
         }
-        return false;
     }
+    return false;
+}
 
-    function wrapExactString(elem, str, wrap) {
+function isContentElement(node) {
+    return true;
+}
+
+export default function magicWrapFactory($) {
+    function wrapExactString(elem, str, wrap, isWrappableElement, isContentElement) {
         var textNodes = [];
 
-        var strData = DomUtil.serializeElementTextWithOffsets(elem);
+        var strData = DomUtil.serializeElementTextWithOffsets(elem, isContentElement);
         var offset = strData.text.indexOf(str);
 
         // Find all text nodes.
@@ -85,8 +89,10 @@ export default function magicWrapFactory($) {
         return $(wrappableElements).wrap(wrap);
     };
 
-    function createMatcher(elem) {
-        var matcher = new FuzzyStringMatcher();
+    function createMatcher(elem, isContentElement) {
+        var matcher = new FuzzyStringMatcher({
+            isContentElement: isContentElement
+        });
         matcher.populateIndexWithElement(elem);
 
         var data = elem.data('magicwrap') || {};
@@ -104,7 +110,7 @@ export default function magicWrapFactory($) {
         elem.find('.magicwrap').contents().unwrap();
     }
 
-    function apply(elem, wraps) {
+    function apply(elem, wraps, isWrappableElement, isContentElement) {
         var data = elem.data('magicwrap');
         if (!data || !data.matcher) {
             return;
@@ -127,7 +133,7 @@ export default function magicWrapFactory($) {
             if (!exactStr) {
                 continue;
             }
-            wrapExactString(elem, exactStr, wrapHtml).parent().data('magicwrap-wrap', wrap);
+            wrapExactString(elem, exactStr, wrapHtml, isWrappableElement, isContentElement).parent().data('magicwrap-wrap', wrap);
         }
 
         return $('.magicwrap');
@@ -138,14 +144,16 @@ export default function magicWrapFactory($) {
             args = {};
         }
         var wraps = args.wraps || [];
+        var isContentElementFunction = args.isContentElement || isContentElement;
+        var isWrappableElementFunction = args.isWrappableElement || isWrappableElement;
         switch (op) {
             case 'apply':
                 remove(this);
-                createMatcher(this);
-                return apply(this, wraps);
+                createMatcher(this, isContentElementFunction);
+                return apply(this, wraps, isWrappableElementFunction, isContentElementFunction);
             case 'update':
                 removeWraps(this);
-                return apply(this, wraps);
+                return apply(this, wraps, isWrappableElementFunction, isContentElementFunction);
             case 'remove':
                 removeWraps(this);
                 remove(this);
