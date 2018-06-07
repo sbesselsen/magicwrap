@@ -13,7 +13,17 @@ gulp.task('js:compile', () =>
         // Inject our own Rollup since gulp-rollup uses an outdated version.
         rollup: rollup,
         plugins: [
-            babel()
+            babel({
+                babelrc: false,
+                presets: [
+                    ["@babel/preset-env", {
+                        targets: {
+                            browsers: ["last 2 versions"]
+                        },
+                        modules: false
+                    }]
+                ]
+            })
         ]
     }, {
         format: 'iife',
