@@ -4,7 +4,7 @@ import FuzzyStringMatcher from './util/fuzzy';
 function isWrappableElement(node) {
     if (node.nodeName) {
         const nodeName = ('' + node.nodeName).toLowerCase();
-        if (nodeName.match(/^(span|a|i|b|em|strong|h[123456]|abbr|font)$/)) {
+        if (nodeName.match(/^(span|a|i|b|em|strong|abbr|font)$/)) {
             return true;
         }
     }

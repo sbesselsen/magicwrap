@@ -19,11 +19,6 @@ DomUtil.walkElements = function (elem, enter, leave) {
   }
 };
 
-DomUtil._isLineBreakingTag = function (tagName) {
-  const tagNameUpper = tagName.toUpperCase();
-  return tagNameUpper === 'P' || tagNameUpper == 'DIV' || tagNameUpper === 'SECTION' || tagNameUpper === 'ARTICLE' || tagNameUpper === 'BR' || tagNameUpper === 'HR' || tagNameUpper === 'TABLE' || tagNameUpper === 'TR' || tagNameUpper === 'TD' || tagNameUpper === 'TH' || tagNameUpper === 'LI';
-};
-
 DomUtil.serializeElementText = function (elem, isContentElement) {
   const textParts = [];
   let inNonContentCounter = 0;
@@ -46,7 +41,7 @@ DomUtil.serializeElementText = function (elem, isContentElement) {
     if (inNonContentCounter > 0) {
         return;
     }
-    if (item[0].tagName && DomUtil._isLineBreakingTag(item[0].tagName)) {
+    if (item[0].tagName) {
       textParts.push(' ');
     }
   });
@@ -84,7 +79,7 @@ DomUtil.serializeElementTextWithOffsets = function (elem, isContentElement) {
     if (inNonContentCounter > 0) {
       return;
     }
-    if (item[0].tagName && DomUtil._isLineBreakingTag(item[0].tagName)) {
+    if (item[0].tagName) {
       textParts.push(' ');
       length++;
     }

@@ -45,7 +45,7 @@ FuzzySequenceUtil.bestMatchSequence = function (searchIndex, words, ngramSize, m
   // Find the best prefix match from each start index and optimize over all.
   var bestResult = null;
   for (var i = 0; i < startIndices.length; i++) {
-    var startIndex = startIndices[i];
+    var startIndex = Math.max(0, startIndices[i]);
     var wordsFromStart = wordArray.slice(startIndex, startIndex + maxChanges * 2 + words.length * 2);
     var result = FuzzySequenceUtil.prefixDistance(wordsFromStart, words, deleteCost, insertCost, 0, maxChanges);
     if (!bestResult || result.distance < bestResult.distance || (result.distance === bestResult.distance && startIndex < bestResult.startIndex)) {
