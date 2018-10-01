@@ -235,6 +235,10 @@ FuzzyStringMatcher.prototype.matchTokens = function (tokens) {
     // Perhaps decrease the nGramSize and increase maxChanges?
     return null;
   }
+  if (bestMatch.distance > this.maxChanges) {
+    // Match is not good enough.
+    return null;
+  }
 
   // Calculate the string offset.
   var result = {

@@ -26,11 +26,6 @@
     }
   };
 
-  DomUtil._isLineBreakingTag = function (tagName) {
-    var tagNameUpper = tagName.toUpperCase();
-    return tagNameUpper === 'P' || tagNameUpper == 'DIV' || tagNameUpper === 'SECTION' || tagNameUpper === 'ARTICLE' || tagNameUpper === 'BR' || tagNameUpper === 'HR' || tagNameUpper === 'TABLE' || tagNameUpper === 'TR' || tagNameUpper === 'TD' || tagNameUpper === 'TH' || tagNameUpper === 'LI';
-  };
-
   DomUtil.serializeElementText = function (elem, isContentElement) {
     var textParts = [];
     var inNonContentCounter = 0;
@@ -59,7 +54,7 @@
         return;
       }
 
-      if (item[0].tagName && DomUtil._isLineBreakingTag(item[0].tagName)) {
+      if (item[0].tagName) {
         textParts.push(' ');
       }
     });
@@ -103,7 +98,7 @@
         return;
       }
 
-      if (item[0].tagName && DomUtil._isLineBreakingTag(item[0].tagName)) {
+      if (item[0].tagName) {
         textParts.push(' ');
         length++;
       }
@@ -314,7 +309,7 @@
     var bestResult = null;
 
     for (var i = 0; i < startIndices.length; i++) {
-      var startIndex = startIndices[i];
+      var startIndex = Math.max(0, startIndices[i]);
       var wordsFromStart = wordArray.slice(startIndex, startIndex + maxChanges * 2 + words.length * 2);
       var result = FuzzySequenceUtil.prefixDistance(wordsFromStart, words, deleteCost, insertCost, 0, maxChanges);
 
@@ -522,6 +517,11 @@
     if (!bestMatch) {
       // Perhaps decrease the nGramSize and increase maxChanges?
       return null;
+    }
+
+    if (bestMatch.distance > this.maxChanges) {
+      // Match is not good enough.
+      return null;
     } // Calculate the string offset.
 
 
@@ -557,7 +557,7 @@
     if (node.nodeName) {
       var nodeName = ('' + node.nodeName).toLowerCase();
 
-      if (nodeName.match(/^(span|a|i|b|em|strong|h[123456]|abbr|font)$/)) {
+      if (nodeName.match(/^(span|a|i|b|em|strong|abbr|font)$/)) {
         return true;
       }
     }
